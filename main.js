@@ -1,3 +1,17 @@
+function getUrlParameter(name) {
+  const url = new URL(window.location.href);
+  return url.searchParams.get(name);
+}
+
+function prepopulateItems() {
+  const itemsParam = getUrlParameter("items");
+  if (itemsParam) {
+    const items = itemsParam.split(",").join("\n");
+    document.getElementById("inputList").value = items;
+    convertListToUrls();
+  }
+}
+
 const stores = [
   {
     name: "Aldi",
@@ -16,7 +30,8 @@ const stores = [
   },
   {
     name: "K-Tipp",
-    urlScheme: "https://www.ktipp.ch/suche/?q=",
+    urlScheme: "https://www.ktipp.ch/tests/produktetests/?q=",
+    extraParams: "&searchDoctype=Produktetest&searchTheme=",
     emoji: "🔍",
   },
 ];
@@ -41,7 +56,7 @@ function convertListToUrls() {
 
       const itemUrls = [];
       stores.forEach((store) => {
-        const url = `${store.urlScheme}${encodedItem}`;
+        const url = `${store.urlScheme}${encodedItem}${store.extraParams || ""}`;
         itemUrls.push(url);
         urls.push(url);
         const button = document.createElement("button");
@@ -89,4 +104,6 @@ function openAllUrls() {
   });
 }
 
-convertListToUrls();
+
+// Call prepopulateItems at the end of the script
+prepopulateItems();
