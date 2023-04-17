@@ -34,6 +34,11 @@ const stores = [
     extraParams: "&searchDoctype=Produktetest&searchTheme=",
     emoji: "🔍",
   },
+  {
+    name: "Galaxus",
+    urlScheme: "https://www.galaxus.ch/de/search?q=",
+    emoji: "🌌",
+  },
 ];
 
 let urls = [];
@@ -41,18 +46,22 @@ let urls = [];
 function convertListToUrls() {
   const inputList = document.getElementById("inputList");
   const items = inputList.value.split("\n");
-  const urlList = document.getElementById("urlList");
+  const cardsContainer = document.getElementById("cardsContainer");
 
-  urlList.innerHTML = "";
+  cardsContainer.innerHTML = "";
   urls = [];
 
   items.forEach((item) => {
     if (item.trim() !== "") {
       const encodedItem = encodeURIComponent(item.trim());
 
+      const card = document.createElement("div");
+      card.className = "card";
+      cardsContainer.appendChild(card);
+
       const itemLabel = document.createElement("h3");
       itemLabel.textContent = item.trim();
-      urlList.appendChild(itemLabel);
+      card.appendChild(itemLabel);
 
       const itemUrls = [];
       stores.forEach((store) => {
@@ -64,7 +73,7 @@ function convertListToUrls() {
         button.onclick = function () {
           window.open(url, "_blank");
         };
-        urlList.appendChild(button);
+        card.appendChild(button);
       });
 
       const openAllButton = document.createElement("button");
@@ -74,10 +83,10 @@ function convertListToUrls() {
           window.open(url, "_blank");
         });
       };
-      urlList.appendChild(openAllButton);
+      card.appendChild(openAllButton);
 
       const separator = document.createElement("hr");
-      urlList.appendChild(separator);
+      card.appendChild(separator);
     }
   });
 
@@ -92,18 +101,11 @@ function convertListToUrls() {
           window.open(url, "_blank");
         });
     };
-    urlList.appendChild(openAllStoreButton);
+    cardsContainer.appendChild(openAllStoreButton);
   });
 
   document.getElementById("openUrlsBtn").disabled = urls.length === 0;
 }
-
-function openAllUrls() {
-  urls.forEach((url) => {
-    window.open(url);
-  });
-}
-
 
 // Call prepopulateItems at the end of the script
 prepopulateItems();
