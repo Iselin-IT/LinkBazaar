@@ -16,35 +16,35 @@ const stores = [
   {
     name: "Aldi",
     urlScheme: "https://www.aldi-now.ch/de/search?q=",
-    emoji: "🛒",
+    favicon: "https://www.aldi-now.ch/favicon.ico",
   },
   {
     name: "Coop",
     urlScheme: "https://www.coop.ch/de/search/?text=",
-    emoji: "🏪",
+    favicon: "https://www.coop.ch/_ui/23.3.1.237/desktop/common/img/core/global-images/img/favicons/apple-touch-icon.png",
   },
   {
     name: "Migros",
     urlScheme: "https://www.migros.ch/en/search?query=",
-    emoji: "🛍️",
+    favicon: "https://www.migros.ch/favicon.ico",
   },
 
   {
     name: "Galaxus",
     urlScheme: "https://www.galaxus.ch/de/search?q=",
-    emoji: "🌌",
+    favicon: "https://www.galaxus.ch/favicon.ico",
   },
   {
     name: "K-Tipp",
     urlScheme: "https://www.ktipp.ch/tests/produktetests/?q=",
     extraParams: "&searchDoctype=Produktetest&searchTheme=",
-    emoji: "🔍",
+    favicon: "https://www.ktipp.ch/fileadmin/templates/favicon/ktipp/apple-icon-57x57.png",
   },
   {
   name: "Saldo",
   urlScheme: "https://www.saldo.ch/tests/produktetests/?q=",
   extraParams: "&searchDoctype=Produktetest&searchTheme=",
-  emoji: "💰",
+    favicon: "https://www.saldo.ch/fileadmin/templates/favicon/saldo/apple-icon-57x57.png",
 },
 ];
 
@@ -76,7 +76,13 @@ function convertListToUrls() {
         itemUrls.push(url);
         urls.push(url);
         const button = document.createElement("button");
-        button.innerText = store.emoji;
+        // Create an img element for the favicon
+        const favicon = document.createElement("img");
+        favicon.src = store.favicon;
+        favicon.width = 16;
+        favicon.height = 16;
+        // Append the img element to the button
+        button.appendChild(favicon);
         button.onclick = function () {
           window.open(url, "_blank");
         };
