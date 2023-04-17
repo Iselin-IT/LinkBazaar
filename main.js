@@ -28,6 +28,12 @@ const stores = [
     urlScheme: "https://www.migros.ch/en/search?query=",
     emoji: "🛍️",
   },
+
+  {
+    name: "Galaxus",
+    urlScheme: "https://www.galaxus.ch/de/search?q=",
+    emoji: "🌌",
+  },
   {
     name: "K-Tipp",
     urlScheme: "https://www.ktipp.ch/tests/produktetests/?q=",
@@ -35,10 +41,11 @@ const stores = [
     emoji: "🔍",
   },
   {
-    name: "Galaxus",
-    urlScheme: "https://www.galaxus.ch/de/search?q=",
-    emoji: "🌌",
-  },
+  name: "Saldo",
+  urlScheme: "https://www.saldo.ch/tests/produktetests/?q=",
+  extraParams: "&searchDoctype=Produktetest&searchTheme=",
+  emoji: "💰",
+},
 ];
 
 let urls = [];
