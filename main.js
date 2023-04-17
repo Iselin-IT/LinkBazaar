@@ -14,6 +14,11 @@ const stores = [
     urlScheme: "https://www.migros.ch/en/search?query=",
     emoji: "🛍️",
   },
+  {
+    name: "K-Tipp",
+    urlScheme: "https://www.ktipp.ch/suche/?q=",
+    emoji: "🔍",
+  },
 ];
 
 let urls = [];
