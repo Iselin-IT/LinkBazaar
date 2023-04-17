@@ -11,7 +11,7 @@ const stores = [
   },
   {
     name: "Migros",
-    urlScheme: "https://www.migros.ch/de/search?query=",
+    urlScheme: "https://www.migros.ch/en/search?query=",
     emoji: "🛍️",
   },
 ];
@@ -59,6 +59,20 @@ function convertListToUrls() {
       const separator = document.createElement("hr");
       urlList.appendChild(separator);
     }
+  });
+
+  // Add buttons for opening all URLs for specific stores
+  stores.forEach((store) => {
+    const openAllStoreButton = document.createElement("button");
+    openAllStoreButton.innerText = `Open All ${store.name}`;
+    openAllStoreButton.onclick = function () {
+      urls
+        .filter((url) => url.startsWith(store.urlScheme))
+        .forEach((url) => {
+          window.open(url, "_blank");
+        });
+    };
+    urlList.appendChild(openAllStoreButton);
   });
 
   document.getElementById("openUrlsBtn").disabled = urls.length === 0;
