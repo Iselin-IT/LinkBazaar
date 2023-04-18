@@ -1,17 +1,3 @@
-function getUrlParameter(name) {
-  const url = new URL(window.location.href);
-  return url.searchParams.get(name);
-}
-
-function prepopulateItems() {
-  const itemsParam = getUrlParameter("items");
-  if (itemsParam) {
-    const items = itemsParam.split(",").join("\n");
-    document.getElementById("inputList").value = items;
-    convertListToUrls();
-  }
-}
-
 const stores = [
   {
     name: "Aldi",
@@ -28,7 +14,6 @@ const stores = [
     urlScheme: "https://www.migros.ch/en/search?query=",
     favicon: "https://www.migros.ch/favicon.ico",
   },
-
   {
     name: "Galaxus",
     urlScheme: "https://www.galaxus.ch/de/search?q=",
@@ -41,22 +26,32 @@ const stores = [
     favicon: "https://www.ktipp.ch/fileadmin/templates/favicon/ktipp/apple-icon-57x57.png",
   },
   {
-  name: "Saldo",
-  urlScheme: "https://www.saldo.ch/tests/produktetests/?q=",
-  extraParams: "&searchDoctype=Produktetest&searchTheme=",
+    name: "Saldo",
+    urlScheme: "https://www.saldo.ch/tests/produktetests/?q=",
+    extraParams: "&searchDoctype=Produktetest&searchTheme=",
     favicon: "https://www.saldo.ch/fileadmin/templates/favicon/saldo/apple-icon-57x57.png",
-},
+  },
 ];
 
-let urls = [];
+let allUrls = [];
+
+function prepopulateItems() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const itemsParam = urlParams.get("items");
+  if (itemsParam) {
+    document.getElementById("inputList").value = itemsParam.replace(/,/g, "\n");
+  }
+  // Call convertListToUrls to enable/disable the "Open All URLs" button based on prepopulated items
+convertListToUrls();
+}
 
 function convertListToUrls() {
+  allUrls = [];
   const inputList = document.getElementById("inputList");
   const items = inputList.value.split("\n");
   const cardsContainer = document.getElementById("cardsContainer");
 
   cardsContainer.innerHTML = "";
-  urls = [];
 
   items.forEach((item) => {
     if (item.trim() !== "") {
@@ -74,14 +69,12 @@ function convertListToUrls() {
       stores.forEach((store) => {
         const url = `${store.urlScheme}${encodedItem}${store.extraParams || ""}`;
         itemUrls.push(url);
-        urls.push(url);
+        allUrls.push(url);
         const button = document.createElement("button");
-        // Create an img element for the favicon
         const favicon = document.createElement("img");
         favicon.src = store.favicon;
         favicon.width = 16;
         favicon.height = 16;
-        // Append the img element to the button
         button.appendChild(favicon);
         button.onclick = function () {
           window.open(url, "_blank");
@@ -103,12 +96,26 @@ function convertListToUrls() {
     }
   });
 
-  // Add buttons for opening all URLs for specific stores
+  function removeItemAndCard(index) {
+    const inputList = document.getElementById("inputList");
+    const items = inputList.value.split("\n");
+    items.splice(index, 1);
+    inputList.value = items.join("\n");
+
+    const cardToRemove = document.querySelector(`.card[data-index="${index}"]`);
+    if (cardToRemove) {
+      cardToRemove.remove();
+    }
+
+    convertListToUrls();
+  }
+
+
   stores.forEach((store) => {
     const openAllStoreButton = document.createElement("button");
-    openAllStoreButton.innerText = `Open All ${store.name}`;
+    openAllStoreButton.innerText = "Open All " + store.name;
     openAllStoreButton.onclick = function () {
-      urls
+      allUrls
         .filter((url) => url.startsWith(store.urlScheme))
         .forEach((url) => {
           window.open(url, "_blank");
@@ -116,9 +123,17 @@ function convertListToUrls() {
     };
     cardsContainer.appendChild(openAllStoreButton);
   });
-
-  document.getElementById("openUrlsBtn").disabled = urls.length === 0;
+  // Enable or disable the "Open All URLs" button
+openAllUrlsButton.disabled = allUrls.length === 0;
 }
 
-// Call prepopulateItems at the end of the script
+function openUrls() {
+  allUrls.forEach((url) => {
+    window.open(url, "_blank");
+  });
+}
+
+document.getElementById("convertButton").onclick = convertListToUrls;
+document.getElementById("openAllUrlsButton").onclick = openUrls;
+
 prepopulateItems();
